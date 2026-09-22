@@ -1,8 +1,8 @@
 # E-Commerce AI — reconstructed dashboard
 
-This repository rebuilds the lost E-Commerce AI dashboard shown in the internship-project screenshots and keeps the interface ready for the SQL / RAG extensions of the original project.
+This project rebuilds the lost E-Commerce AI interface shown in the internship screenshots and keeps the structure ready for the original SQL/RAG backend.
 
-## Reconstructed pages
+## Included UI
 
 - Overview
 - AI Chat
@@ -13,76 +13,109 @@ This repository rebuilds the lost E-Commerce AI dashboard shown in the internshi
 - API Keys
 - Settings
 
-The visual direction intentionally follows the original UI: white workspace, compact left navigation, turquoise AI accent, model/database/document selectors, agent status, compact messages and a bottom composer.
+The visual direction follows the original dashboard: compact left navigation, white workspace, turquoise AI accent, model/database/document selectors, agent status, chat bubbles and the bottom composer.
 
-## OpenRouter AI integration
+## Current functional state
 
-The project now includes a server-side Vercel Function at:
+The UI is interactive and deployable on Vercel.
+
+AI Chat calls the server-side Vercel Function at:
 
     POST /api/chat
 
-The OpenRouter secret is never sent to the browser. The frontend talks to /api/chat, and the Vercel Function calls OpenRouter.
+The OpenRouter API key stays on the server and is never exposed to the browser.
 
-Curated free models available in the UI:
+The interface also keeps support for a future separate/legacy backend through:
 
-- google/gemma-4-31b-it:free — recommended default
-- nvidia/nemotron-3-ultra-550b-a55b:free — deeper reasoning
-- nvidia/nemotron-3.5-lightning:free — faster agent-style tasks
-- google/gemma-4-26b-a4b-it:free — lighter multimodal/structured tasks
-- openrouter/free — automatic free-model router and fallback
+    VITE_API_URL=https://your-backend.example.com
 
-The server only accepts this free-model allowlist, helping avoid accidental paid-model usage.
+If VITE_API_URL is not defined, the app uses /api/chat automatically.
 
-## Required Vercel environment variable
+## OpenRouter free models
 
-Add this secret in Vercel Project Settings → Environment Variables:
+The model selector currently includes:
 
-    OPENROUTER_API_KEY=<your OpenRouter key>
+- google/gemma-4-31b-it:free
+- nvidia/nemotron-3-ultra-550b-a55b:free
+- nvidia/nemotron-3.5-lightning:free
+- google/gemma-4-26b-a4b-it:free
+- openrouter/free
 
-Recommended optional values:
+Default recommendation for this prototype:
 
-    OPENROUTER_MODEL=google/gemma-4-31b-it:free
-    OPENROUTER_FALLBACK_MODEL=openrouter/free
-    OPENROUTER_APP_NAME=E-Commerce AI
-    OPENROUTER_SITE_URL=https://your-project.vercel.app
+    google/gemma-4-31b-it:free
 
-Apply the variables to Production and Preview if you want PR/branch previews to use AI too. Redeploy after changing environment variables.
+Automatic fallback:
 
-Do not create a VITE_OPENROUTER_API_KEY variable. Any VITE_ variable is compiled into frontend code and can be exposed to visitors.
+    openrouter/free
 
 ## Vercel deployment
 
-1. Import this GitHub repository in Vercel.
-2. Framework preset: Vite.
-3. Root directory: repository root.
-4. Build command: npm run build.
-5. Output directory: dist.
-6. Install command: npm install.
-7. Node.js: 24.x.
-8. Add OPENROUTER_API_KEY and the optional variables above.
-9. Deploy.
-10. Open /api/health. It should report configured: true.
-11. Open the dashboard → API Test and send the default /api/chat request.
-12. Open AI Chat and start a real conversation.
+Import this GitHub repository into Vercel.
 
-## Local frontend
+Use:
+
+    Framework Preset: Vite
+    Root Directory: ./
+    Install Command: npm install
+    Build Command: npm run build
+    Output Directory: dist
+    Node.js Version: 24.x
+
+Then add these variables under:
+
+    Project Settings -> Environment Variables
+
+Required:
+
+    OPENROUTER_API_KEY=<your OpenRouter secret key>
+
+Recommended:
+
+    OPENROUTER_MODEL=google/gemma-4-31b-it:free
+    OPENROUTER_FALLBACK_MODEL=openrouter/free
+    OPENROUTER_SITE_URL=https://YOUR-PROJECT.vercel.app
+    OPENROUTER_APP_NAME=E-Commerce AI
+
+Do NOT create a VITE_OPENROUTER_API_KEY variable. Any variable prefixed with VITE_ can be bundled into frontend code.
+
+After deployment, verify:
+
+    https://YOUR-PROJECT.vercel.app/api/health
+
+Expected result:
+
+    configured: true
+
+Then open AI Chat and send a message.
+
+## Local development
+
+Create a local .env file from .env.example and insert your own OpenRouter key.
+
+Run:
 
     npm install
     npm run dev
 
-A local Vite-only dev server does not automatically emulate Vercel Functions. For the complete local stack use the Vercel CLI, or deploy a Preview branch on Vercel.
+For the closest local reproduction of Vercel Functions, use the Vercel CLI:
 
-## Optional legacy backend
-
-If the original SQL/RAG server is restored later, set:
-
-    VITE_API_URL=https://your-legacy-backend.example.com
-
-The UI will then use its /query endpoint instead of the built-in /api/chat function.
+    npx vercel dev
 
 ## Security notes
 
-- Keep OPENROUTER_API_KEY server-side.
-- Free-model providers may have different data-retention terms; do not send confidential customer data before reviewing the selected provider policy.
-- The current AI endpoint does not pretend it queried a database or document unless actual retrieved content is supplied.
-- SQL integrations should remain read-only by default.
+- Never commit OPENROUTER_API_KEY.
+- Keep SQL connections read-only for the AI tools.
+- Free model endpoints are rate-limited and can change availability.
+- Do not send confidential customer/store information to a free inference endpoint until you have reviewed that provider's data policy.
+
+## Next backend phase
+
+The current Vercel AI endpoint makes the reconstructed application genuinely usable as a chat application. The next backend phase is to reconnect the original project capabilities:
+
+1. PostgreSQL / WooCommerce read-only tools.
+2. document ingestion and embeddings.
+3. semantic RAG search.
+4. safe SQL query generation.
+5. web scraping connector.
+6. source citations inside AI answers.
