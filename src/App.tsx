@@ -1,3 +1,4 @@
+import AdminGate, { adminLogout } from './AdminGate'
 import { FormEvent, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Activity, BarChart3, Bot, Check, ChevronDown, CircleUserRound, Clipboard, Code2,
@@ -247,15 +248,15 @@ function SettingsPage() {
   </div>
 }
 
-export default function App() {
+function Dashboard() {
   const [page,setPage]=useState<Page>('chat')
   const [sidebar,setSidebar]=useState(false)
   const title=useMemo(()=>nav.find(n=>n[0]===page)?.[1]||'AI Chat',[page])
   function go(p:Page){setPage(p);setSidebar(false)}
   return <div className="app">
-    <aside className={'sidebar '+(sidebar?'open':'')}><div className="brand"><div className="brand-icon">E</div><b>E-Commerce AI</b><button className="mobile-close" onClick={()=>setSidebar(false)}><X size={15}/></button></div><nav>{nav.map(([id,label,Icon])=><button key={id} className={page===id?'active':''} onClick={()=>go(id)}><Icon size={14}/><span>{label}</span></button>)}</nav><div className="sidebar-bottom"><div className="user-mini"><div>JD</div><span><b>John Doe</b><small>john@example.com</small></span><MoreHorizontal size={14}/></div></div></aside>
+    <aside className={'sidebar '+(sidebar?'open':'')}><div className="brand"><div className="brand-icon">E</div><b>E-Commerce AI</b><button className="mobile-close" onClick={()=>setSidebar(false)}><X size={15}/></button></div><nav>{nav.map(([id,label,Icon])=><button key={id} className={page===id?'active':''} onClick={()=>go(id)}><Icon size={14}/><span>{label}</span></button>)}</nav><div className="sidebar-bottom"><div className="user-mini"><div>AD</div><span><b>Administrator</b><small>Secure session</small></span><MoreHorizontal size={14}/></div></div></aside>
     {sidebar&&<button className="overlay" onClick={()=>setSidebar(false)}/>}
-    <main><header className="global-header"><button className="mobile-menu" onClick={()=>setSidebar(true)}><Menu size={16}/></button><span className="crumb">{title}</span><div className="global-actions"><button><span>?</span> Help</button><button><CircleUserRound size={13}/> User</button></div></header>
+    <main><header className="global-header"><button className="mobile-menu" onClick={()=>setSidebar(true)}><Menu size={16}/></button><span className="crumb">{title}</span><div className="global-actions"><button><span>?</span> Help</button><button onClick={adminLogout}><CircleUserRound size={13}/> Sign out</button></div></header>
       {page==='overview'&&<Overview go={go}/>}
       {page==='chat'&&<ChatPage/>}
       {page==='api-test'&&<ApiTest/>}
@@ -266,4 +267,9 @@ export default function App() {
       {page==='settings'&&<SettingsPage/>}
     </main>
   </div>
+}
+
+
+export default function App() {
+  return <AdminGate><Dashboard/></AdminGate>
 }
