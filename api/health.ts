@@ -1,13 +1,18 @@
 const FREE_MODELS = [
   {
-    id: 'google/gemma-4-31b-it:free',
-    label: 'Google Gemma 4 31B (free)',
-    role: 'Recommended for this dashboard',
-  },
-  {
     id: 'nvidia/nemotron-3-ultra-550b-a55b:free',
     label: 'NVIDIA Nemotron 3 Ultra (free)',
-    role: 'Complex reasoning',
+    role: 'Recommended: reasoning, SQL and agent workflows',
+  },
+  {
+    id: 'poolside/laguna-s-2.1:free',
+    label: 'Poolside Laguna S 2.1 (free)',
+    role: 'Strong coding / SQL alternative',
+  },
+  {
+    id: 'google/gemma-4-31b-it:free',
+    label: 'Google Gemma 4 31B (free)',
+    role: 'General-purpose alternative',
   },
   {
     id: 'nvidia/nemotron-3.5-lightning:free',
