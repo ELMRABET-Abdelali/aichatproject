@@ -1,5 +1,7 @@
 const FREE_MODELS = new Set([
   'openrouter/free',
+  'nvidia/nemotron-3-ultra-550b-a55b:free',
+  'poolside/laguna-s-2.1:free',
   'google/gemma-4-31b-it:free',
   'google/gemma-4-26b-a4b-it:free',
   'nvidia/nemotron-3-ultra-550b-a55b:free',
@@ -52,7 +54,7 @@ function safeMessages(body: ChatBody): ChatMessage[] {
 }
 
 function selectedModel(requested?: string) {
-  const configured = env('OPENROUTER_MODEL') || 'google/gemma-4-31b-it:free';
+  const configured = env('OPENROUTER_MODEL') || 'nvidia/nemotron-3-ultra-550b-a55b:free';
   const candidate = requested || configured;
   return FREE_MODELS.has(candidate) ? candidate : configured;
 }
