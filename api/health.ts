@@ -1,4 +1,4 @@
-import { isAuthenticated } from './_auth';
+import { isAuthenticated } from './_auth.js';
 
 const FREE_MODELS = [
   {

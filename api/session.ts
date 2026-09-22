@@ -1,4 +1,4 @@
-import { authConfigured, isAuthenticated } from './_auth';
+import { authConfigured, isAuthenticated } from './_auth.js';
 
 export async function GET(request: Request) {
   const authenticated = authConfigured() && (await isAuthenticated(request));

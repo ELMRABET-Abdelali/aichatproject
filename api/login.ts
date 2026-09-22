@@ -3,7 +3,7 @@ import {
   createSessionToken,
   passwordMatches,
   sessionCookie,
-} from './_auth';
+} from './_auth.js';
 
 export async function POST(request: Request) {
   if (!authConfigured()) {
