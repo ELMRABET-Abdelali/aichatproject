@@ -1,8 +1,25 @@
 const COOKIE_NAME = 'ecommerce_admin_session';
 const SESSION_SECONDS = 60 * 60 * 12;
 
+function normalizeSecret(value?: string) {
+  const trimmed = value?.trim();
+  if (!trimmed) return undefined;
+
+  const first = trimmed[0];
+  const last = trimmed[trimmed.length - 1];
+
+  if (
+    trimmed.length >= 2 &&
+    ((first === '"' && last === '"') || (first === "'" && last === "'"))
+  ) {
+    return trimmed.slice(1, -1).trim();
+  }
+
+  return trimmed;
+}
+
 function env(name: string) {
-  return process.env[name]?.trim();
+  return normalizeSecret(process.env[name]);
 }
 
 function bytesToHex(bytes: Uint8Array) {
@@ -47,7 +64,8 @@ export function authConfigured() {
 export async function passwordMatches(password: string) {
   const expected = env('ADMIN_PASSWORD');
   if (!expected) return false;
-  const [a, b] = await Promise.all([sha256(password), sha256(expected)]);
+  const normalizedPassword = normalizeSecret(password) || '';
+  const [a, b] = await Promise.all([sha256(normalizedPassword), sha256(expected)]);
   return timingSafeEqual(a, b);
 }
 
