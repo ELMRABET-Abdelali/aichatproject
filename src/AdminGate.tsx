@@ -31,7 +31,11 @@ export default function AdminGate({children}:{children:ReactNode}) {
         body:JSON.stringify({password}),
       })
       const data=await res.json().catch(()=>({}))
-      if(!res.ok) throw new Error(data?.error || 'Unable to sign in.')
+      if(!res.ok){
+        const base=data?.error || 'Unable to sign in.'
+        const hint=res.status===401 ? ' If you just changed ADMIN_PASSWORD in Vercel, redeploy Production first.' : ''
+        throw new Error(base+hint)
+      }
       setPassword('')
       setState('in')
     }catch(err){
