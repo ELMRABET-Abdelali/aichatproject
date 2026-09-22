@@ -30,8 +30,9 @@ const nav = [
 ] as const
 
 const modelOptions = [
+  ['nvidia/nemotron-3-ultra-550b-a55b:free', 'NVIDIA Nemotron 3 Ultra (free) — recommended'],
+  ['poolside/laguna-s-2.1:free', 'Poolside Laguna S 2.1 (free) — SQL/coding'],
   ['google/gemma-4-31b-it:free', 'Google Gemma 4 31B (free)'],
-  ['nvidia/nemotron-3-ultra-550b-a55b:free', 'NVIDIA Nemotron 3 Ultra (free)'],
   ['nvidia/nemotron-3.5-lightning:free', 'NVIDIA Nemotron 3.5 Lightning (free)'],
   ['google/gemma-4-26b-a4b-it:free', 'Google Gemma 4 26B A4B (free)'],
   ['openrouter/free', 'OpenRouter Free Router'],
@@ -66,7 +67,7 @@ function Overview({go}:{go:(p:Page)=>void}) {
 }
 
 function ChatPage() {
-  const [model,setModel]=useState('google/gemma-4-31b-it:free')
+  const [model,setModel]=useState('nvidia/nemotron-3-ultra-550b-a55b:free')
   const [db,setDb]=useState('WooCommerce')
   const [doc,setDoc]=useState('3 selected documents')
   const [debug,setDebug]=useState(false)
@@ -131,7 +132,7 @@ function ChatPage() {
 function ApiTest() {
   const [method,setMethod]=useState('POST')
   const [endpoint,setEndpoint]=useState('/api/chat')
-  const [body,setBody]=useState('{\n  "query": "Explain what an e-commerce RAG assistant can do.",\n  "model": "google/gemma-4-31b-it:free"\n}')
+  const [body,setBody]=useState('{\n  "query": "Explain what an e-commerce RAG assistant can do.",\n  "model": "nvidia/nemotron-3-ultra-550b-a55b:free"\n}')
   const [response,setResponse]=useState('Click Send Request to test the deployed Vercel API.')
   const [status,setStatus]=useState('Ready')
   async function send(){
@@ -228,7 +229,7 @@ function ApiKeys() {
     <section className="card provider-card">
       <div className="provider-main"><div className="connection-icon"><KeyRound size={18}/></div><div><b>OpenRouter provider</b><p>Environment variable: <code>OPENROUTER_API_KEY</code></p></div></div>
       <div className="provider-status"><span className={health?.configured?'status':'status provider-off'}><span/>{health?.configured?'Configured':'Not configured'}</span><button className="soft" onClick={checkProvider} disabled={checking}>{checking?'Checking...':'Check status'}</button></div>
-      <div className="provider-meta"><span>Default model <b>{health?.model || 'google/gemma-4-31b-it:free'}</b></span><span>Fallback <b>{health?.fallbackModel || 'openrouter/free'}</b></span><span>Secret exposure <b>Server-side only</b></span></div>
+      <div className="provider-meta"><span>Default model <b>{health?.model || 'nvidia/nemotron-3-ultra-550b-a55b:free'}</b></span><span>Fallback <b>{health?.fallbackModel || 'openrouter/free'}</b></span><span>Secret exposure <b>Server-side only</b></span></div>
     </section>
     <div className="security"><ShieldCheck size={18}/><div><b>Do not paste the provider secret into frontend code</b><p>Add it in Vercel → Project Settings → Environment Variables. The deployed browser never receives the OpenRouter key.</p></div></div>
     <section className="card table-card client-keys"><div className="table key-head"><span>Name</span><span>Client key</span><span>Created</span><span/></div>{keys.map(k=><div className="table key-row" key={k.id}><span><b>{k.name}</b></span><span className="key-value"><code>{shown===k.id?k.value:'••••••••••••••••••••••••'}</code><button onClick={()=>setShown(shown===k.id?null:k.id)}>{shown===k.id?<EyeOff size={13}/>:<Eye size={13}/>}</button></span><span>{k.created}</span><button onClick={()=>setKeys(v=>v.filter(x=>x.id!==k.id))}><Trash2 size={13}/></button></div>)}</section>
@@ -242,7 +243,7 @@ function SettingsPage() {
   const [saved,setSaved]=useState(false)
   return <div className="scroll page-pad"><PageTitle eyebrow="Workspace" title="Settings" subtitle="Control agent defaults and interface preferences." action={<button className="primary" onClick={()=>{setSaved(true);setTimeout(()=>setSaved(false),1200)}}>{saved?<Check size={14}/>:<Settings size={14}/>} {saved?'Saved':'Save changes'}</button>} />
     <div className="settings-stack"><section className="card panel"><div className="panel-head"><div><b>Agent behavior</b><small>Defaults for new conversations</small></div><Bot size={17}/></div><div className="setting-row"><div><b>Conversation memory</b><small>Keep context during the current browser session</small></div><Toggle value={memory} onChange={setMemory}/></div><div className="setting-row"><div><b>Show source citations</b><small>Expose the documents used in RAG responses</small></div><Toggle value={citations} onChange={setCitations}/></div><div className="setting-row"><div><b>Safe SQL mode</b><small>Restrict database tools to read-only operations</small></div><Toggle value={safe} onChange={setSafe}/></div></section>
-    <section className="card panel"><div className="panel-head"><div><b>Default model</b><small>OpenRouter free models available in AI Chat</small></div><Sparkles size={17}/></div><div className="form-grid"><label className="field-label">Provider<select defaultValue="OpenRouter"><option>OpenRouter</option></select></label><label className="field-label">Model<select defaultValue="google/gemma-4-31b-it:free">{modelOptions.map(([id,label])=><option value={id} key={id}>{label}</option>)}</select></label></div></section></div>
+    <section className="card panel"><div className="panel-head"><div><b>Default model</b><small>OpenRouter free models available in AI Chat</small></div><Sparkles size={17}/></div><div className="form-grid"><label className="field-label">Provider<select defaultValue="OpenRouter"><option>OpenRouter</option></select></label><label className="field-label">Model<select defaultValue="nvidia/nemotron-3-ultra-550b-a55b:free">{modelOptions.map(([id,label])=><option value={id} key={id}>{label}</option>)}</select></label></div></section></div>
   </div>
 }
 
