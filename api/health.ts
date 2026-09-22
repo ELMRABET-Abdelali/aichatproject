@@ -1,3 +1,5 @@
+import { isAuthenticated } from './_auth';
+
 const FREE_MODELS = [
   {
     id: 'google/gemma-4-31b-it:free',
@@ -26,7 +28,14 @@ const FREE_MODELS = [
   },
 ];
 
-export async function GET() {
+export async function GET(request: Request) {
+  if (!(await isAuthenticated(request))) {
+    return Response.json(
+      { error: 'Unauthorized.' },
+      { status: 401, headers: { 'Cache-Control': 'no-store' } },
+    );
+  }
+
   return Response.json(
     {
       ok: true,
