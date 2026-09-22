@@ -1,3 +1,5 @@
+import { isAuthenticated } from './_auth';
+
 const FREE_MODELS = new Set([
   'openrouter/free',
   'nvidia/nemotron-3-ultra-550b-a55b:free',
@@ -132,6 +134,10 @@ export async function OPTIONS() {
 }
 
 export async function POST(request: Request) {
+  if (!(await isAuthenticated(request))) {
+    return json({ error: 'Unauthorized.' }, 401);
+  }
+
   const apiKey = env('OPENROUTER_API_KEY');
 
   if (!apiKey) {
