@@ -25,8 +25,9 @@ The OpenRouter secret is never sent to the browser. The frontend talks to /api/c
 
 Curated free models available in the UI:
 
-- google/gemma-4-31b-it:free — recommended default
-- nvidia/nemotron-3-ultra-550b-a55b:free — deeper reasoning
+- nvidia/nemotron-3-ultra-550b-a55b:free — recommended default for reasoning, SQL and agent workflows
+- poolside/laguna-s-2.1:free — strong coding / SQL alternative
+- google/gemma-4-31b-it:free — general-purpose alternative
 - nvidia/nemotron-3.5-lightning:free — faster agent-style tasks
 - google/gemma-4-26b-a4b-it:free — lighter multimodal/structured tasks
 - openrouter/free — automatic free-model router and fallback
@@ -41,7 +42,7 @@ Add this secret in Vercel Project Settings → Environment Variables:
 
 Recommended optional values:
 
-    OPENROUTER_MODEL=google/gemma-4-31b-it:free
+    OPENROUTER_MODEL=nvidia/nemotron-3-ultra-550b-a55b:free
     OPENROUTER_FALLBACK_MODEL=openrouter/free
     OPENROUTER_APP_NAME=E-Commerce AI
     OPENROUTER_SITE_URL=https://your-project.vercel.app
@@ -84,5 +85,11 @@ The UI will then use its /query endpoint instead of the built-in /api/chat funct
 
 - Keep OPENROUTER_API_KEY server-side.
 - Free-model providers may have different data-retention terms; do not send confidential customer data before reviewing the selected provider policy.
+- The NVIDIA Nemotron free endpoint explicitly warns against uploading confidential information or personal data; use a paid/privacy-reviewed provider before sending real customer data.
 - The current AI endpoint does not pretend it queried a database or document unless actual retrieved content is supplied.
 - SQL integrations should remain read-only by default.
+
+
+## Important if a key was shared in chat or a file
+
+If an OpenRouter key has been pasted into a chat, document, screenshot or another non-secret location, revoke that key in OpenRouter and create a fresh key before adding it to Vercel. Never commit the replacement key to GitHub.
