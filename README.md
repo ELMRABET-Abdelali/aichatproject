@@ -93,3 +93,25 @@ The UI will then use its /query endpoint instead of the built-in /api/chat funct
 ## Important if a key was shared in chat or a file
 
 If an OpenRouter key has been pasted into a chat, document, screenshot or another non-secret location, revoke that key in OpenRouter and create a fresh key before adding it to Vercel. Never commit the replacement key to GitHub.
+
+
+## Administrator password access
+
+The dashboard is protected by a server-side administrator session.
+
+Add these two variables in Vercel Project Settings -> Environment Variables:
+
+    ADMIN_PASSWORD=<the password you want to use>
+    ADMIN_SESSION_SECRET=<a long random secret, at least 32 characters>
+
+Keep both values server-side. Do not use the VITE_ prefix and do not commit the real values to GitHub.
+
+The login flow uses:
+
+    POST /api/login
+    GET  /api/session
+    POST /api/logout
+
+After successful login, the server sets an HttpOnly, Secure, SameSite=Lax session cookie valid for 12 hours. The OpenRouter chat and provider health endpoints also require this authenticated session.
+
+After adding or changing either admin variable in Vercel, redeploy the project.
